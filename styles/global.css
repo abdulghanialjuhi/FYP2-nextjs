@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+
+:root {
+  --color-primary: #2B3542;
+  --color-secondary: #E2E0DD;
+}
+
 html,
 body {
   padding: 0;
@@ -33,4 +39,61 @@ a {
 img {
   max-width: 100%;
   height: auto;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+}
+
+.primary-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 7px;
+  padding: 0px 15px;
+  background-color: var(--color-primary);
+  color: #fff;
+  border: 1px #fff solid;
+  transition: all 200ms ease;
+  height: 50px;
+}
+
+.primary-button:hover:not(:disabled) {
+  background-color: #fff;
+  color: var(--color-primary);
+  border: 1px var(--color-primary) solid;
+}
+
+.primary-button:disabled,
+.primary-button[disabled] {
+  /* background-color: rgb(210, 210, 210); */
+  opacity: 0.65;
+  cursor: not-allowed;
+
+}
+
+.input-control {
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgb(221, 221, 221);
+  border-radius: 5px;
+  background-color: #ffffff;
+  padding: 10px;
+  padding-right: 45px;
+
+  color: #484848;
+  font-size: 14px;
+  /* font-family: "Nunito"; */
+  height: 52px;
+  line-height: 1.2;
+  /* margin-bottom: 20px; */
+  width: 100%;
+}
+
+.input-control:focus {
+  outline: none;
 }

@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Script from 'next/script'
 
 export default function Meta({ title, description, keywords }) {
 
@@ -6,10 +7,6 @@ export default function Meta({ title, description, keywords }) {
   
   return (
     <Head>
-        <script
-        src="https://kit.fontawesome.com/fbadad80a0.js"
-        crossOrigin="anonymous"
-        ></script>
         <meta name="keywords" content={keywords} />
         <meta name="description" content={description} />
         <link rel="icon" href="/favicon.ico" />

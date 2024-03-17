@@ -26,22 +26,22 @@ const Form = () => {
         }
 
         setBtnLoading(true)
-        // axios.post('/api/auth/login', userObj)
-        // .then(async (res) => {
-        //     if (res.data?.user?.profilePic) {
-        //         // const results = await fetchImageById(res.data.user.profilePic)
-        //         // res.data.user['profileImg'] = results.blob
-        //     }
-        //     actions({type: 'SET_USER', payload: res.data.user})
-        //     actions({type: 'SET_IS_AUTH', payload: res.data.auth})
-        //     router.push('create-listing')
-        //     console.log('res:', res.data);
-        // }).catch((error) => {
-        //     console.log('error: ', error);
-        //     addNewNotifcation('Email or Password Not Correct', 'danger')
-        // }).finally(() => {
-        //     setBtnLoading(false)
-        // })
+        axios.post('/api/auth/login', userObj)
+        .then(async (res) => {
+            if (res.data?.user?.profilePic) {
+                // const results = await fetchImageById(res.data.user.profilePic)
+                // res.data.user['profileImg'] = results.blob
+            }
+            actions({type: 'SET_USER', payload: res.data.user})
+            actions({type: 'SET_IS_AUTH', payload: res.data.auth})
+            // router.push('create-listing')
+            console.log('res:', res.data);
+        }).catch((error) => {
+            console.log('error: ', error);
+            addNewNotifcation('Email or Password Not Correct', 'danger')
+        }).finally(() => {
+            setBtnLoading(false)
+        })
         
     }
 

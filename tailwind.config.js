@@ -33,6 +33,7 @@ module.exports = {
                 },
                 primaryColor: '#2B3542',
                 secondaryColor: '#E2E0DD',
+                secondaryColorHover: '#D0CDC9',
             }
         },
     },

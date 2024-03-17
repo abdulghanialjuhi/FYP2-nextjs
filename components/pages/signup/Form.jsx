@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 import { Context } from "../../../context/GlobalState";
 import { BtnLoadingIndicator } from "../../common/LoadingIndicator";
 
-const Form = () => {
+const Form = ({ setUserObj, setShowOwnerForm }) => {
     const [btnLoading, setBtnLoading] = useState(false)
+    const [isOwner, setIsOwner] = useState(false)
+
+    
     const emailRef = useRef()
+    const phoneRef = useRef()
     const nameRef = useRef()
     const passwordRef = useRef()
     const confirmPasswordRef = useRef()
@@ -16,38 +20,55 @@ const Form = () => {
 
     const router = useRouter()
 
-    const handleLogin = (e) => {
+    const handleSignup = (e) => {
         e.preventDefault()
         if (btnLoading) return
 
+        console.log('passwordRef.current.value: ', passwordRef.current.value);
+        console.log('confirmPasswordRef.current.value: ', confirmPasswordRef.current.value);
+        if (passwordRef.current.value !== confirmPasswordRef.current.value) {
+            return addNewNotifcation('Password and Confirm Password Does Not Match', 'warning')
+        }
+        setBtnLoading(true)
+
 
         const userObj = {
+            fullName: nameRef.current.value,
             email: emailRef.current.value,
+            phoneNumber: phoneRef.current.value,
             password: passwordRef.current.value,
         }
 
-        setBtnLoading(true)
-        // axios.post('/api/auth/login', userObj)
-        // .then(async (res) => {
-        //     if (res.data?.user?.profilePic) {
-        //         // const results = await fetchImageById(res.data.user.profilePic)
-        //         // res.data.user['profileImg'] = results.blob
-        //     }
-        //     actions({type: 'SET_USER', payload: res.data.user})
-        //     actions({type: 'SET_IS_AUTH', payload: res.data.auth})
-        //     router.push('create-listing')
-        //     console.log('res:', res.data);
-        // }).catch((error) => {
-        //     console.log('error: ', error);
-        //     addNewNotifcation('Email or Password Not Correct', 'danger')
-        // }).finally(() => {
-        //     setBtnLoading(false)
-        // })
+        if (isOwner) {
+            setUserObj(userObj)
+            return setShowOwnerForm(true)
+        }
+
+        axios.post('/api/auth/signup', userObj)
+        .then(async (res) => {
+            if (res.data?.user?.profilePic) {
+                // const results = await fetchImageById(res.data.user.profilePic)
+                // res.data.user['profileImg'] = results.blob
+            }
+            addNewNotifcation('Account created successfully', 'success')
+            actions({type: 'SET_USER', payload: res.data.user})
+            actions({type: 'SET_IS_AUTH', payload: res.data.auth})
+            console.log('res:', res.data);
+        }).catch((error) => {
+            console.log('error: ', error);
+            if (error?.response?.status === 409) {
+                addNewNotifcation('Email already used', 'danger')
+            } else {
+                addNewNotifcation('Something went wrong', 'danger')
+            }
+        }).finally(() => {
+            setBtnLoading(false)
+        })
         
     }
 
     return (
-        <form className="w-full flex flex-col gap-5" onSubmit={handleLogin}>
+        <form className="w-full flex flex-col gap-5" onSubmit={handleSignup}>
             <div className="flex flex-col">
                 <h3 className="text-2xl font-[500] mb-2 text-[#484848] text-center">
                     Register to your account
@@ -90,7 +111,25 @@ const Form = () => {
 
                 <div className="absolute top-0 right-0 h-full flex items-center pr-5">
                 <div className="">
-                    <i aria-hidden className="fa fa-envelope-o text-primaryColor"></i>
+                    {/* <i aria-hidden className="fa-envelope text-primaryColor"></i> */}
+                    <i className="fa fa-envelope text-primaryColor" aria-hidden="true"></i>
+                </div>
+                </div>
+            </div>
+            {/* End .input-group */}
+            <div className="mb-2 relative">
+                <input
+                ref={phoneRef}
+                name="text"
+                type="phone"
+                className="input-control"
+                required
+                placeholder="Phone"
+                />
+
+                <div className="absolute top-0 right-0 h-full flex items-center pr-5">
+                <div className="">
+                    <i aria-hidden className="fa fa-phone text-primaryColor"></i>
                 </div>
                 </div>
             </div>
@@ -130,8 +169,22 @@ const Form = () => {
                 </div>
             </div>
 
-            <button disabled={btnLoading} onSubmit={handleLogin} type="submit" className="primary-button">
-                {btnLoading ? <BtnLoadingIndicator /> : 'Register'}
+            <div className="mb-2 relative flex gap-2">
+                <input
+                id='bussniess-owner'
+                name="bussniess owner"
+                type="checkbox"
+                className="cursor-pointer"
+                value={isOwner}
+                onChange={e => setIsOwner(!isOwner)}
+                // placeholder="Confirm Password"
+                />
+                <label className='cursor-pointer' htmlFor="bussniess-owner">I am business owner</label>
+            </div>
+
+
+            <button disabled={btnLoading} onSubmit={handleSignup} type="submit" className="primary-button">
+                {btnLoading ? <BtnLoadingIndicator /> : isOwner ? "Next" : 'Register'}
             </button>
             {/* login button */}
         </form>

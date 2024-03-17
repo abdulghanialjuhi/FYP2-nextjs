@@ -1,10 +1,11 @@
+import HomePage from '../components/pages/home'
 
 export default function Home() {
 
 
     return (
-        <div className='flex'>
-            <span>Home</span>
-        </div>
+        <>
+            <HomePage />
+        </>
     );
 }

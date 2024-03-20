@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  /* Custom font family */
+  .font-nunito {
+    font-family: "Nunito Sans", sans-serif;
+  }
+}
 
 :root {
   --color-primary: #2B3542;
@@ -12,7 +18,8 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family:
+  font-family: 'Nunito Sans', sans-serif;
+  /* font-family:
     Inter,
     -apple-system,
     BlinkMacSystemFont,
@@ -24,7 +31,7 @@ body {
     Fira Sans,
     Droid Sans,
     Helvetica Neue,
-    sans-serif;
+    sans-serif; */
 }
 
 a {

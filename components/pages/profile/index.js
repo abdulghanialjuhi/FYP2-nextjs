@@ -2,54 +2,69 @@ import React from 'react'
 import AsideMenu from './AsideMenu'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import settingsMenu from '../../../data/settingsMenu'
+import ProfileInfo from './ProfileInfo'
+import ChangePass from './ChangePass'
 
 
 export default function Profile() {
 
-    const data = [{ name: 'Profile', path: '/settings/profile', icon: <h1></h1> }]
-    
+
     return (
         <div className='flex flex-grow'>
             <AsideMenu>
-                <SettingsSection title='Smart Contract Dashboard' list={data} />
-                <SettingsSection title='Smart Contract Dashboard' list={data} />
+                {settingsMenu.map((item) => (
+                    <SettingsSection key={item.title} {...item} />
+                ))}
+                {/* <SettingsSection key={item.title} {...item} /> */}
+                <li className='mt-[5rem] border-t-0 py-2'>
+                    <SettingSidebar path='/api/auth/logout' name='Logout' icon='fa fa-user' />
+                </li>
             </AsideMenu>
             <div className='flex flex-grow p-2'>
-                <div className='pl-[6%] pr-6 mt-[4rem] flex flex-grow flex-col'>
+                <div className='pl-[6%] pr-6 my-[4rem] flex flex-grow flex-col'>
                     <div className='w-full my-4 flex'>
                         <h3 className='text-2xl'> My Profile </h3>
                     </div>
 
-                    <SettingSection title={'Profile Information'}>
-                        <div className='flex flex-grow'>
-                            <ul className='flex flex-col'>
-                                <li>
-                                    
-                                </li>
-                            </ul>
-                        </div>
-                    </SettingSection>
+                    {/* user profle */}
+                    <ProfileInfo />
+                    
+                    {/* user password */}
+                    <ChangePass />
+
                 </div>
             </div>
         </div>
     )
 }
 
-const SettingSection = ({ title, children }) => {
+export const SettingSection = ({ title, children }) => {
     
     return (
-        <div className='flex flex-grow bg-gray-0 border border-gray-200 rounded p-4'>
+        <div className='flex flex-grow bg-gray-0 border border-gray-200 rounded p-4 mt-6'>
             <div className='p-2 flex max-w-[180px]'>
                 <h4 className='text-xl font-[300]'>
                     {title}
                 </h4>
             </div>
-            <div className='flex flex-grow p-3'>
+            <div className='flex flex-grow pl-[3rem] py-2'>
                 {children}
             </div>
         </div>
     )
-} 
+}
+
+
+export const SettingInput = ({ label, className, children }) => {
+    
+    return (
+        <div className={`flex flex-col gap-2 min-w-[300px] ${className}`}>
+            <label className='font-nunito'> {label} </label>
+            {children}
+        </div>
+    )
+}
 
 export const SettingsSection = ({ list, title }) => {
 
@@ -72,10 +87,12 @@ export const SettingsSection = ({ list, title }) => {
 const SettingSidebar = ({ name, path, icon }) => {
     const loaction = usePathname()
 
+    const textColor = name === 'Logout' ? 'text-[#721c24]' : 'text-primaryColor'
+
     return (
-        <Link href={path} className={`flex items-center gap-5 cursor-pointer py-2 px-3 rounded-md no-underline text-primaryColor w-full relative hover:bg-gray-300  ${loaction === path ? 'bg-[#ededed]' : ''}`}>
+        <Link href={path} className={`flex items-center gap-5 cursor-pointer py-2 px-3 rounded no-underline ${textColor} w-full relative hover:bg-secondaryColorHover  ${loaction === path ? 'bg-secondaryColorHover' : ''}`}>
             <div className='absolute left-0 w-4 h-4/5 bg-primary rounded-full' />
-            <span className='flex font-[400]'> {icon} </span>
+            <i className={`text-primaryColor ${icon}`}></i>
             <span className='flex font-[400]'> {name} </span>
         </Link>
     )

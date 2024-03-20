@@ -22,7 +22,7 @@ const AsideMenuList = styled.ul`
     display: flex;
     flex-direction: column;
     list-style-type: none;
-    gap: 5px;
+    gap: 1rem;
 
     & > li {
         border-top: 0.5px solid var(--color-primary);

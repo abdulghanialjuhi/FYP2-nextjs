@@ -16,7 +16,7 @@ export default function Home() {
 
                 </div>
 
-                <div className='flex flex-grow z-20'>
+                <div className='flex flex-grow z-20 mt-[8rem]'>
                     <div className='w-full max-w-[1200px] mx-auto flex h-full text-white justify-between items-center'>
                         <h1 className='text-[55px] font-[800] text-secondaryColor text-justify'> Step into Style, Reserve Your Barber Chair! </h1>
 

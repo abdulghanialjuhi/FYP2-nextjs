@@ -20,7 +20,7 @@ export default function BarbershopImages({ images }) {
     };
 
     return (
-        <div className='flex flex-grow rounded-md max-w-[800px] max-h-[600px]'>
+        <div className='flex flex-grow rounded-md max-w-[1200px] w-full max-h-[600px] overflow-hidden'>
             <div className="relative flex-grow">
                 {images1.map((image, index) => (
                     <Image

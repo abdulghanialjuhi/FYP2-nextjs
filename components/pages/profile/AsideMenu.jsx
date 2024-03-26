@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const AsideMenuContainer = styled.aside`
-    width: ${(props) => props.asidewidth ? props.asidewidth : '250px'};
+    min-width: 250px;
+    max-width: 250px;
     display: flex;
     padding: 10px;
     padding-top: 2rem;

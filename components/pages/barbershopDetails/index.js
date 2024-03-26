@@ -2,6 +2,7 @@ import { useParams } from 'next/navigation';
 import React from 'react'
 import BarbershopWorkingHours from './BarbershopWorkinghours';
 import BarbershopImages from './BarbershopImages';
+import BarbershopServices from './BarbershopServices';
 
 export default function BarberShopDetails() {
     
@@ -12,7 +13,7 @@ export default function BarberShopDetails() {
 
     return (
         <div className='flex flex-grow p-8'>
-            <div className='w-full max-w-[1200px] mx-auto flex flex-col'>
+            <div className='w-full max-w-[1100px] mx-auto flex flex-col my-4'>
                 <div className='flex w-full justify-between my-4'>
                     <div>
                         <h4 className='flex'>
@@ -30,12 +31,11 @@ export default function BarberShopDetails() {
 
                 <div className='w-full flex gap-4 h-[500px]'>
                     <BarbershopImages images={[]} />
-
                     <BarbershopWorkingHours wokringHours={[]} />
                 </div>
 
                 <div className='mt-4 flex w-full'>
-
+                    <BarbershopServices />
                 </div>
             </div>
         </div>

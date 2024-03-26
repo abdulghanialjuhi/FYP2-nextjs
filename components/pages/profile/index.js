@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AsideMenu from './AsideMenu'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import settingsMenu from '../../../data/settingsMenu'
 import ProfileInfo from './ProfileInfo'
 import ChangePass from './ChangePass'
+import Switch from './Switch'
+import SettingSwitch from './SwitchBusiness'
 
 
 export default function Profile() {
@@ -12,15 +14,7 @@ export default function Profile() {
 
     return (
         <div className='flex flex-grow'>
-            <AsideMenu>
-                {settingsMenu.map((item) => (
-                    <SettingsSection key={item.title} {...item} />
-                ))}
-                {/* <SettingsSection key={item.title} {...item} /> */}
-                <li className='mt-[5rem] border-t-0 py-2'>
-                    <SettingSidebar path='/api/auth/logout' name='Logout' icon='fa fa-user' />
-                </li>
-            </AsideMenu>
+            <AsideComponent />
             <div className='flex flex-grow p-2'>
                 <div className='pl-[6%] pr-6 my-[4rem] flex flex-grow flex-col'>
                     <div className='w-full my-4 flex'>
@@ -36,6 +30,27 @@ export default function Profile() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export const AsideComponent = () => {
+    const [showModal, setShowModal] = useState(false)
+
+    const handleSwitch = () => {
+        setShowModal(!showModal)
+    }
+
+    return (
+        <AsideMenu>
+            {settingsMenu.map((item) => (
+                <SettingsSection key={item.title} {...item} />
+            ))}
+            {/* <SettingsSection key={item.title} {...item} /> */}
+            <li className='mt-[5rem] border-t-0 py-2'>
+                <SettingSwitch onClick={handleSwitch} name='Business Account' icon='fa fa-user' />
+                <SettingSidebar path='/api/auth/logout' name='Logout' icon='fa fa-user' />
+            </li>
+        </AsideMenu>
     )
 }
 
@@ -72,7 +87,7 @@ export const SettingsSection = ({ list, title }) => {
         <li className="flex flex-col"> 
             <span className='flex w-full text-[13px] my-[4px] text-gray-300 font-[300]'> {title} </span>
             <div className='flex flex-col flex-grow w-full'>
-                <ul className='flex flex-col gap-5'>
+                <ul className='flex flex-col gap-1'>
                     {list.map((item) => (
                         <li key={item.path}>
                            <SettingSidebar {...item} /> 

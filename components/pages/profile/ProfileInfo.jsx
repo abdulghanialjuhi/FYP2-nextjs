@@ -62,10 +62,10 @@ export default function ProfileInfo() {
             <div className='flex flex-grow flex-col'>
                 <ul className='flex flex-col w-full'>
                     <li className='flex w-full gap-4 flex-wrap'>
-                        <SettingInput label='Email' className={'flex-auto max-w-[400px]'}>
+                        <SettingInput label='Full Name' className={'flex-auto max-w-[400px]'}>
                             <input ref={nameRef} className='p-3 border border-gray-200 rounded-md' type="text" name="name"/>
                         </SettingInput>
-                        <SettingInput label='Full Name' className={'flex-auto max-w-[400px]'}>
+                        <SettingInput label='Email' className={'flex-auto max-w-[400px]'}>
                             <input ref={emailRef} className='p-3 border border-gray-200 rounded-md' type="text" name="name"/>
                         </SettingInput>
                         <SettingInput label='Phone Number' className={'flex-auto max-w-[400px]'}>

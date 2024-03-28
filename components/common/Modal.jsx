@@ -142,7 +142,7 @@ const Header = ({ children, isClose=true, ...rest }) => {
         <ModalHeader {...rest}>
             <h3>{children}</h3>
             {isClose && <ModalButton onClick={onModalClose}>
-                <i class="fa fa-times" aria-hidden="true"></i>
+                <i className="fa fa-times" aria-hidden="true"></i>
             </ModalButton>}
         </ModalHeader>
     );

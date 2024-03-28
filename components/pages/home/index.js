@@ -5,12 +5,12 @@ export default function Home() {
 
     return (
         <div className='flex flex-grow flex-col'>
-            {/* <div class="absolute inset-0 bg-gradient-to-b from-[#2E2E2E] to-transparent z-30"></div> */}
+            {/* <div className="absolute inset-0 bg-gradient-to-b from-[#2E2E2E] to-transparent z-30"></div> */}
 
             <section className='flex flex-grow h-screen w-screen'>
                 <div className='flex absolute w-screen h-screen top-0'>
-                    <div class="absolute bottom-0 left-0 right-0 top-0 w-full bg-[rgb(35,39,51)] opacity-60 z-20"/>
-                    <div class="fixed top-0  w-full h-full">
+                    <div className="absolute bottom-0 left-0 right-0 top-0 w-full bg-[rgb(35,39,51)] opacity-60 z-20"/>
+                    <div className="fixed top-0  w-full h-full">
                         <Image src={'/barber-banner.jpg'} layout='fill' className='w-full min-w-[1000px] h-full min-h-[600px]' />
                     </div>
 

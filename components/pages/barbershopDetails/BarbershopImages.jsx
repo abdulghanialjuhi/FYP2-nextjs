@@ -35,13 +35,13 @@ export default function BarbershopImages({ images }) {
                     className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded-l-md"
                     onClick={prevSlide}
                 >
-                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <i className="fa fa-angle-left" aria-hidden="true"></i>
                 </button>
                 <button
                     className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white px-2 py-1 rounded-r-md"
                     onClick={nextSlide}
                 >
-                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    <i className="fa fa-angle-right" aria-hidden="true"></i>
                 </button>
             </div>
         </div>

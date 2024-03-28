@@ -9,6 +9,8 @@
     "axios": "^1.6.7",
     "bcryptjs": "^2.4.3",
     "cookie": "^0.6.0",
+    "formidable": "^3.5.1",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.1",
     "next": "latest",

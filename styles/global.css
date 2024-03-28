@@ -77,10 +77,29 @@ img {
 
 .primary-button:disabled,
 .primary-button[disabled] {
-  /* background-color: rgb(210, 210, 210); */
   opacity: 0.65;
   cursor: not-allowed;
+}
 
+.seconday-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border-radius: 7px;
+  padding: 0px 15px;
+  /* background-color: var(--color-primary); */
+  background-color: #fff;
+  color: var(--color-primary);
+  border: 1px var(--color-secondary) solid;
+
+  /* border: 1px #fff solid; */
+  transition: all 200ms ease;
+  height: 50px;
+}
+
+.seconday-button:hover {
+  background-color: #e5e5e5;
 }
 
 .input-control {
@@ -112,14 +131,21 @@ img {
 
 .location-modal {
   position: relative;
+  padding: 5px;
 }
 
-.location-modal:hover::after { 
-  content: "Latitude and longitude are coordinates used to specify locations on the Earth's surface. Check https://www.google.com/maps";
+.location-description {
+  display: none;
+
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  margin-top: 5px;
+  content: "";
   position: absolute;
-  width: 300px;
+  width: 400px;
   /* width: auto; */
-  height: 100px;
+  /* height: 100px; */
   background-color: #fff;
   top: 100%;
   left: -80px;
@@ -127,4 +153,30 @@ img {
   box-shadow: 0px 0px 7px 1px rgba(238, 238, 238, 0.75);
   padding: 10px;
   border-radius: 5px;
+}
+
+.location-description::before {
+  content:"\A";
+  border-style: solid;
+  border-width: 11px 13px 11px 0;
+  border-color: transparent #fff transparent transparent;
+  /* box-shadow: 0px 0px 7px 1px rgba(238, 238, 238, 0.75); */
+
+  transform: rotate(90deg);
+  position: absolute;
+  top: -13px;
+  left: 86px;
+  /* width: 20px; */
+  /* height: 20px;/ */
+  background-color: transparent;
+}
+
+.location-description > a {
+  color: blue;
+}
+
+.location-modal:hover > .location-description { 
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }

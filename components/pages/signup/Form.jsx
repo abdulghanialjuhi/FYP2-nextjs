@@ -24,13 +24,13 @@ const Form = ({ setUserObj, setShowOwnerForm }) => {
         e.preventDefault()
         if (btnLoading) return
 
-        console.log('passwordRef.current.value: ', passwordRef.current.value);
-        console.log('confirmPasswordRef.current.value: ', confirmPasswordRef.current.value);
-        if (passwordRef.current.value !== confirmPasswordRef.current.value) {
+        if (passwordRef.current.value.length < 8) {
+            return addNewNotifcation('Password must be at least 8 character', 'warning')
+        } else if (passwordRef.current.value !== confirmPasswordRef.current.value) {
             return addNewNotifcation('Password and Confirm Password Does Not Match', 'warning')
         }
+        
         setBtnLoading(true)
-
 
         const userObj = {
             fullName: nameRef.current.value,
@@ -52,7 +52,7 @@ const Form = ({ setUserObj, setShowOwnerForm }) => {
             }
             addNewNotifcation('Account created successfully', 'success')
             actions({type: 'SET_USER', payload: res.data.user})
-            actions({type: 'SET_IS_AUTH', payload: res.data.auth})
+            actions({type: 'SET_IS_AUTH', payload: true})
             console.log('res:', res.data);
         }).catch((error) => {
             console.log('error: ', error);

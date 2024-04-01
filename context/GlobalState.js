@@ -35,20 +35,20 @@ export default function GlobalState() {
         axios.get('/api/auth/is-user-auth', {withCredentials: true})
         .then(async(res) => {
             if (res.data.auth) {
-                // if (res.data.user.profilePic) {
-                //     try {
-                //         const response = await axios.get(`/api/images/${res.data.user.profilePic}`, { responseType: 'arraybuffer' })
-                //         const contentType = response.headers['content-type'];
-                //         const blob = new Blob([response.data], { type: contentType });
-                //         res.data.user['profileImg'] = blob
-                //     } catch (err) {
-                //         console.log('error: ', err);
-                //     } finally {
-                //         setUser(res.data.user)
-                //     }
-                // } else {
+                if (res.data.user.profilePic) {
+                    try {
+                        const response = await axios.get(`/api/images/${res.data.user.profilePic}`, { responseType: 'arraybuffer' })
+                        const contentType = response.headers['content-type'];
+                        const blob = new Blob([response.data], { type: contentType });
+                        res.data.user['profileImg'] = blob
+                    } catch (err) {
+                        console.log('error: ', err);
+                    } finally {
+                        setUser(res.data.user)
+                    }
+                } else {
                     setUser(res.data.user)
-                // }
+                }
             }
             setIsAuth(res.data.auth)
             console.log(res);

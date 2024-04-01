@@ -9,7 +9,9 @@ export default async function handler(req, res) {
 
     if (method === 'GET') {
 
-        const token = req.headers.cookie?.split('=')[1]
+        // const token = req.headers.cookie?.split('=')[1]
+        const cookies = req.headers.cookie.split('; ');
+        const token = cookies.find(cookie => cookie.startsWith('user-session'))?.split('=')[1];
         if (!token) {
             req.auth = false
         }

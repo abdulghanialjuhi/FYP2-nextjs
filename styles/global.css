@@ -180,3 +180,83 @@ img {
   flex-direction: column;
   gap: 10px;
 }
+
+
+
+
+
+/*== Profile Avatar ==*/
+.wrap-custom-file {
+  position: relative;
+  display: inline-block;
+  width: 260px;
+  height: 260px;
+  text-align: center;
+}
+
+.wrap-custom-file-small {
+  position: relative;
+  display: inline-block;
+  width: 160px;
+  height: 160px;
+  text-align: center;
+}
+
+.wrap-custom-file input[type="file"], .wrap-custom-file-small input[type="file"]{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.wrap-custom-file label, .wrap-custom-file-small label {
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  background-image: url(/upload_photo.jpg);
+  border-radius: 5px;
+  -webkit-transition: -webkit-transform 0.4s;
+  transition: -webkit-transform 0.4s;
+  transition: transform 0.4s;
+  transition: transform 0.4s, -webkit-transform 0.4s;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.wrap-custom-file label span, .wrap-custom-file-small label span {
+  border-radius: 8px;
+  background-color: #ffffff;
+  -webkit-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.09);
+  -moz-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.09);
+  -o-box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.09);
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.09);
+  bottom: 20px;
+  color: #484848;
+  font-size: 14px;
+  /* font-family: "Georgia"; */
+  line-height: 2.2;
+  height: 50px;
+  left: 20px;
+  position: absolute;
+  width: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrap-custom-file label i, .wrap-custom-file-small label i {
+  color: var(--color-primary);
+  display: inline-block;
+  font-size: 20px;
+  margin-right: 5px;
+}

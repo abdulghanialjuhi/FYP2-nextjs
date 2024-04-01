@@ -4,7 +4,10 @@ import jwt from 'jsonwebtoken';
 
 const verifyToken = (req, res, next) => {
     // const authHeader = req.headers.authorization;
-    const token = req.headers.cookie?.split('=')[1]
+    // const token = req.headers.cookie?.split('=')[1]
+    const cookies = req.headers.cookie.split('; ');
+    const token = cookies.find(cookie => cookie.startsWith('user-session'))?.split('=')[1];
+    
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {

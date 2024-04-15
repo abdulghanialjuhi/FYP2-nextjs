@@ -142,59 +142,58 @@ export default function SettingSwitch({ name, onClick, icon }) {
 
     const handleCreateBarbershop = async () => {
 
-        // if (!nameRef.current.value || !phoneRef.current.value || !stateRef.current.value || !cityRef.current.value || !latitudeRef.current.value || !longitudeRef.current.value) {
-        //     return addNewNotifcation('Please fill in all fields', 'warning')
-        // } else if (isAnyServiceEmpty(services)) {
-        //     return addNewNotifcation('Please fill in all services fields', 'warning')
-        // } else if (isAnyBarberEmpty(barbers)) {
-        //     return addNewNotifcation('Please fill in all barbers fields', 'warning')
-        // } else if (isAnyFieldEmptyForOpenDays(business)) {
-        //     return addNewNotifcation('Please fill in all business hours fields', 'warning')
-        // } else if (!selectedImgs.length > 0) {
-        //     return addNewNotifcation('Please add at least one image', 'warning')
-        // } 
-        if (!isValidLatitude(latitudeRef.current.value)) {
+        if (!nameRef.current.value || !phoneRef.current.value || !stateRef.current.value || !cityRef.current.value || !latitudeRef.current.value || !longitudeRef.current.value) {
+            return addNewNotifcation('Please fill in all fields', 'warning')
+        } else if (isAnyServiceEmpty(services)) {
+            return addNewNotifcation('Please fill in all services fields', 'warning')
+        } else if (isAnyBarberEmpty(barbers)) {
+            return addNewNotifcation('Please fill in all barbers fields', 'warning')
+        } else if (isAnyFieldEmptyForOpenDays(business)) {
+            return addNewNotifcation('Please fill in all business hours fields', 'warning')
+        } else if (!selectedImgs.length > 0) {
+            return addNewNotifcation('Please add at least one image', 'warning')
+        } else if (!isValidLatitude(latitudeRef.current.value)) {
             return addNewNotifcation('Please add valid latitude', 'warning')
         } else if (!isValidLongitude(longitudeRef.current.value)) {
             return addNewNotifcation('Please add valid longitude', 'warning')
         }
 
-        // setBtnLoading(true)
+        setBtnLoading(true)
 
-        // try {
+        try {
 
-        //     // upload images and get their ids in array
-        //     const images = await uplodHorseImages(selectedImgs)
-        //     const barbershopObj = {
-        //         owner: user._id,
-        //         city: cityRef.current.value,
-        //         state: stateRef.current.value,
-        //         name: nameRef.current.value,
-        //         phone: phoneRef.current.value,
-        //         businesHours: business,
-        //         services: services,
-        //         barbers: barbers,
-        //         coordinates: [latitudeRef.current.value, longitudeRef.current.value],
-        //         images: images
-        //     }
+            // upload images and get their ids in array
+            const images = await uplodHorseImages(selectedImgs)
+            const barbershopObj = {
+                owner: user._id,
+                city: cityRef.current.value,
+                state: stateRef.current.value,
+                name: nameRef.current.value,
+                phone: phoneRef.current.value,
+                businesHours: business,
+                services: services,
+                barbers: barbers,
+                coordinates: [latitudeRef.current.value, longitudeRef.current.value],
+                images: images
+            }
 
-        //     // console.log('barbershopObj: ', barbershopObj);
+            // console.log('barbershopObj: ', barbershopObj);
 
-        //     const res = await axios.post('api/barbershop', barbershopObj)
-        //     console.log('res: ', res);
+            const res = await axios.post('api/barbershop', barbershopObj)
+            console.log('res: ', res);
 
-        //     const updateUser = await axios.put(`api/auth/update-user/${user._id}`, {business: true})
-        //     console.log('updateUser: ', updateUser);
+            const updateUser = await axios.put(`api/auth/update-user/${user._id}`, {business: true})
+            console.log('updateUser: ', updateUser);
 
-        //     addNewNotifcation('Barbershop added succssfully', 'succss')
-        //     setModal(false)
-        //     setActive(false)
+            addNewNotifcation('Barbershop added succssfully', 'succss')
+            setModal(false)
+            setActive(false)
 
-        // } catch(err) {
-        //     console.log('error: ', err);
-        // } finally {
-        //     setBtnLoading(false)
-        // }
+        } catch(err) {
+            console.log('error: ', err);
+        } finally {
+            setBtnLoading(false)
+        }
 
     }
 

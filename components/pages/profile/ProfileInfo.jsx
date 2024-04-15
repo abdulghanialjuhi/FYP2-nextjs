@@ -34,7 +34,7 @@ export default function ProfileInfo() {
             email: emailRef.current.value,
             fullName: nameRef.current.value,
             phoneNumber: phoneRef.current.value,
-            profilePic: "6608279fba32d0413b249dc7"
+            // profilePic: "6608279fba32d0413b249dc7"
         }
 
         setBtnLoading(true)

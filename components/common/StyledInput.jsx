@@ -51,7 +51,7 @@ const AnimatedInput = ({ placeholderName, ...rest }) => {
         if (inputRef?.current?.value) {
             setIsFocused(true);
         }
-    }, [])
+    }, [inputRef?.current?.value])
 
     return (
         <InputContainer>

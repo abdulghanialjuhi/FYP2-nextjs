@@ -9,6 +9,19 @@ export default function GlobalState() {
     const [user, setUser] = useState({})
     const [isAuth, setIsAuth] = useState(false)
     const [notificationStatus, setNotificationStatus] = useState([]);
+    const [filter, setFilter] = useState({
+        name: '',
+        state: '',
+        city: '',
+        services: [
+            { id: 1, name: "Haircut", checked: false },
+            { id: 2, name: "Beard Trim", checked: false },
+            { id: 3, name: "Hot Towel Shave", checked: false },
+            { id: 4, name: "Hair Coloring", checked: false },
+            { id: 5, name: "Scalp Treatment", checked: false },
+            { id: 6, name: "Facial Treatment", checked: false }
+        ]
+    })
 
     const addNewNotifcation = (message, type, timeremaining = 4) => {
         setNotificationStatus(prev => [...prev, { message, type, timeremaining }])
@@ -26,6 +39,8 @@ export default function GlobalState() {
                 return setIsAuth(payload)
             case "SET_NOTIFCATION_STATUS":
                 return setNotificationStatus(payload)
+            case "SET_FILTER":
+                return setFilter(payload)
             default:
                 return loading;
         }
@@ -61,6 +76,6 @@ export default function GlobalState() {
         })
     }, [])
 
-    return { actions, addNewNotifcation, loading, user, isAuth, notificationStatus }
+    return { actions, addNewNotifcation, loading, user, isAuth, filter, notificationStatus }
 }
 

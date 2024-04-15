@@ -94,7 +94,7 @@ const ModalButton = styled.button`
 const ModalBody = styled.div`
     display: flex;
     flex-grow: 1;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 0.3px solid rgba(0, 0, 0, 0.2);
     padding: 1rem;
     min-height: 200px;
     max-height:70vh;

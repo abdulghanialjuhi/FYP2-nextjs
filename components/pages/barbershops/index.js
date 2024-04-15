@@ -1,12 +1,31 @@
+'use client'
+
 import Image from 'next/image'
-import React from 'react'
+import React, { useContext } from 'react'
 import BarbershopSearchCard from './BarbershopSearchCard'
 import { useRouter } from 'next/router'
+import { useBarbers } from '../../../hooks/useBarbers'
+import { Context } from '../../../context/GlobalState'
 
 export default function Barbershops() {
-    const barbershops = [
-        {_id: '1333', name: 'barbershop', location: 'location', review: 4.5, img: '/barber-banner.jpg'}
-    ]
+    const { barbers, loading } = useBarbers()
+    const { filter } = useContext(Context)
+
+    if (loading) {
+        return <h1>loading</h1>
+    }
+
+    const nameHandler = (item) => {
+        return item.name.toLowerCase().includes(filter.name?.toLowerCase());
+    }
+
+    const stateHandler = (item) => {
+        return item.state.toLowerCase().includes(filter.state?.toLowerCase());
+    }
+
+    const cityHandler = (item) => {
+        return item.city.toLowerCase().includes(filter.city?.toLowerCase());
+    }
 
     return (
         <div className='flex flex-grow p-8'>
@@ -16,8 +35,14 @@ export default function Barbershops() {
                 </div>
                 <div className='flex w-full gap-4'>
                     <div className='flex w-full flex-col gap-3'>
-                        <BarberShopCard {...barbershops[0]} />
-                        <BarberShopCard {...barbershops[0]} />
+                        {barbers    
+                        ?.filter(nameHandler)
+                        ?.filter(stateHandler)
+                        ?.filter(cityHandler)
+                        // ?.filter(propertiesHandler)
+                        .map((barber) => (
+                            <BarberShopCard key={barber._id} {...barber} />
+                        ))}
                     </div>
                     <BarbershopSearchCard />
                 </div>
@@ -26,18 +51,21 @@ export default function Barbershops() {
     )
 }
 
-const BarberShopCard = ({ _id, name, location, review, img }) => {
+const BarberShopCard = ({ _id, name, location, review, barbers, state, city, images, owner }) => {
 
     const router = useRouter()
 
     const hanldeClick = () => {
         router.push(`/barbershops/${_id}`)
     }
-    
     return (
         <div onClick={hanldeClick} className='flex w-full h-[260px] bg-gray-0 rounded-md border border-gray-200 p-4 cursor-pointer hover:shadow-lg'>
             <div className='flex w-[40%] h-[220px] max-w-[400px] rounded-sm overflow-hidden'>
-                <Image src={img} width={200} height={200} className='w-full h-full' />
+                <Image 
+                alt='barbershop-image'
+                // src={images[0]?.blob} 
+                src={images.length > 0 ? URL.createObjectURL(images[0].blob) : ''}
+                width={200} height={200} className='w-full h-full' />
             </div>
 
             <div className='flex flex-grow flex-col ml-4'>
@@ -46,14 +74,22 @@ const BarberShopCard = ({ _id, name, location, review, img }) => {
                 </div>
 
                 <ul className='flex w-full mb-4 flex-col gap-2'>
-                    <li className='text-gray-600 font-[300] text-[15px]'>Location: {location} </li>
-                    <li className='text-gray-600 font-[300] text-[15px]'>Review: {review} </li>
+                    <li className='text-gray-600 font-[300] text-[15px]'>State: {state} </li>
+                    <li className='text-gray-600 font-[300] text-[15px]'>City: {city} </li>
+                    <li className='text-gray-600 font-[300] text-[15px]'>Barbers: {barbers?.length} </li>
+                    {/* <li className='text-gray-600 font-[300] text-[15px]'>Review: {review} </li> */}
                 </ul>
 
                 <div className='mt-auto py-2 border-t border-t-gray-200 w-full'>
-                    <div className='w-[40px] h-[40px]'>
-                        <div className='w-full h-full rounded-full relative overflow-hidden'>
-                            <Image src={img} layout='fill' objectFit="cover" />
+                    <div className='w-full flex gap-3'>
+                        <div className='w-[40px] h-[40px] rounded-full relative overflow-hidden'>
+                            <Image
+                            alt='owner-image'
+                            src={owner?.profile ? URL.createObjectURL(owner?.profile.blob) : ''}
+                            layout='fill' objectFit="cover" />
+                        </div>
+                        <div className='flex ml-4 items-center'>
+                            <span> {owner.fullName} </span>
                         </div>
                     </div>
                 </div>

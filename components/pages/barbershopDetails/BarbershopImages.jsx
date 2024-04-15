@@ -3,29 +3,23 @@ import React, { useState } from 'react'
 
 export default function BarbershopImages({ images }) {
     
-    const images1 = [
-        '/barber-banner.jpg',
-        '/img2.png',
-        '/img3.png',
-    ]
-
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const nextSlide = () => {
-      setCurrentSlide((prevSlide) => (prevSlide === images1.length - 1 ? 0 : prevSlide + 1));
+      setCurrentSlide((prevSlide) => (prevSlide === images.length - 1 ? 0 : prevSlide + 1));
     };
   
     const prevSlide = () => {
-      setCurrentSlide((prevSlide) => (prevSlide === 0 ? images1.length - 1 : prevSlide - 1));
+      setCurrentSlide((prevSlide) => (prevSlide === 0 ? images.length - 1 : prevSlide - 1));
     };
 
     return (
         <div className='flex flex-grow rounded-md max-w-[1200px] w-full max-h-[600px] overflow-hidden'>
             <div className="relative flex-grow">
-                {images1.map((image, index) => (
+                {images.map((image, index) => (
                     <Image
                     key={index}
-                    src={image}
+                    src={URL.createObjectURL(image?.blob)}
                     alt={`Image ${index + 1}`}
                     layout='fill'
                     className={`absolute inset-0 mx-auto ${index === currentSlide ? 'block' : 'hidden'}`}

@@ -26,6 +26,7 @@ const serviceHoursSchema = new mongoose.Schema({
 const barbersSchema = new mongoose.Schema({
     name: { type: String, required: true },
     photo: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Image' },
+    rate: {Type: Number }
 })
 
 const barbershopSchem = new mongoose.Schema({
@@ -46,6 +47,7 @@ const barbershopSchem = new mongoose.Schema({
         index: '2dsphere', // Create a 2dsphere index for geospatial queries
         required: true
     },
+    barbershopRate: {Type: Number },
     createdAt: { type: Date, default: Date.now },
     images: [String],
     owner: {

@@ -32,17 +32,17 @@ export default async function handler(req, res) {
             if (gender) query.gender = gender;
 
             try {
-            const horses = await Barberhop.find(query);
+            const barbers = await Barberhop.find(query).populate('owner').exec();
 
-            const combinedHorses = await Promise.all(horses.map(async (horse) => {
-                const user = await User.findById(horse.userID); 
-                const horseCopy = {...horse._doc}
-                horseCopy['user'] = user
-                return horseCopy ;
-            }));
+            // const combinedBarbers = await Promise.all(barbers.map(async (barber) => {
+            //     const user = await User.findById(barber.owner); 
+            //     const barberCopy = {...barber._doc}
+            //     barberCopy['owner'] = user
+            //     return barberCopy ;
+            // }));
             
 
-            res.status(200).json({ success: true, data: combinedHorses });
+            res.status(200).json({ success: true, data: combinedBarbers });
             } catch (error) {
             res.status(400).json({ success: false, error: error.message });
             }

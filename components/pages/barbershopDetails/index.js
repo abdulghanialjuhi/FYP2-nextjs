@@ -3,13 +3,18 @@ import React from 'react'
 import BarbershopWorkingHours from './BarbershopWorkinghours';
 import BarbershopImages from './BarbershopImages';
 import BarbershopServices from './BarbershopServices';
+import { useBarber } from '../../../hooks/useBarberDetails';
 
 export default function BarberShopDetails() {
     
     const parmms = useParams()
     const { id } = parmms
-    console.log('id: ', id);
+    const { barber, loading } = useBarber(id)
 
+
+    if (loading) {
+        return <h1>loading</h1>
+    }
 
     return (
         <div className='flex flex-grow p-8'>
@@ -17,25 +22,25 @@ export default function BarberShopDetails() {
                 <div className='flex w-full justify-between my-4'>
                     <div>
                         <h4 className='flex'>
-                            name
+                            {barber.name}
                         </h4>
                     </div>
                     
                     <div>
                         <span className='flex'>
-                            rate
+                            {barber.rate || 'rate'}
                         </span>
                     </div>
 
                 </div>
 
                 <div className='w-full flex gap-4 h-[500px]'>
-                    <BarbershopImages images={[]} />
-                    <BarbershopWorkingHours wokringHours={[]} />
+                    <BarbershopImages images={barber.images} />
+                    <BarbershopWorkingHours wokringHours={barber.businesHours} />
                 </div>
 
                 <div className='mt-4 flex w-full'>
-                    <BarbershopServices />
+                    <BarbershopServices services={barber.services} barber={barber} />
                 </div>
             </div>
         </div>

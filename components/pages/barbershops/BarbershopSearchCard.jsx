@@ -17,6 +17,23 @@ export default function BarbershopSearchCard() {
         })
     }
 
+    const handleClearSearch = () => {
+        actions({type: 'SET_FILTER', payload: {
+            name: '',
+            state: '',
+            city: '',
+            services: [
+                { id: 1, name: "Haircut", checked: false },
+                { id: 2, name: "Beard Trim", checked: false },
+                { id: 3, name: "Hot Towel Shave", checked: false },
+                { id: 4, name: "Hair Coloring", checked: false },
+                { id: 5, name: "Scalp Treatment", checked: false },
+                { id: 6, name: "Facial Treatment", checked: false }
+            ]
+        }
+        })
+    }
+
     return (                   
         <div className='w-[450px] h-[400px] bg-gray-0 rounded-md border border-gray-200 p-4 flex flex-col'>
             <div className='flex w-full flex-col gap-4 mt-4 text-black'>
@@ -49,7 +66,7 @@ export default function BarbershopSearchCard() {
 
 
             <div className="mt-auto w-full flex">
-                <button className="primary-button">
+                <button onClick={handleClearSearch} className="primary-button">
                     Clear Search
                 </button>
             </div>

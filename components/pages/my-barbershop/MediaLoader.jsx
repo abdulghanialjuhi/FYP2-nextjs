@@ -1,8 +1,8 @@
 import Image from "next/image";
-import selectedFiles from "../../utils/selectedFiles";
 import styled from "styled-components";
 import { useContext } from "react";
-import { Context } from "../../context/GlobalState";
+import selectedFiles from "../../../utils/selectedFiles";
+import { Context } from "../../../context/GlobalState";
 
 const ImageContainer = styled.div`
     background-color: rgb(247, 247, 247);
@@ -77,11 +77,17 @@ const UploadText = styled.p`
     position: relative;
 `
 
+function generateUniqueId() {
+    const timestamp = new Date().getTime();
+    const randomNum = Math.floor(Math.random() * 1000000); // Adjust the range as needed
+    const uniqueId = `${timestamp}_${randomNum}`;
+    return uniqueId;
+}
 
 
 
 
-const MediaUploader = ({ selectedImgs, setSelectedImgs }) => {
+const MediaUploader = ({ selectedImgs, setSelectedImgs, blob=false }) => {
 
     const { addNewNotifcation } = useContext(Context)
 
@@ -92,16 +98,27 @@ const MediaUploader = ({ selectedImgs, setSelectedImgs }) => {
         selectedFiles(e)?.some((file2) => file1.name === file2.name)
         );
 
+
         if (!isExist) {
-            setSelectedImgs((old) => [...old, ...selectedFiles(e)]);
+            const selectedFilesArr = [...selectedFiles(e)]
+            const fileId = []
+            selectedFilesArr.forEach((file) => {
+            const obj = {
+                id: generateUniqueId(),
+                blob: file,
+                new: true
+            }
+            fileId.push(obj)
+            })
+            setSelectedImgs((old) => [...old, ...fileId]);
         } else {
             addNewNotifcation("You have selected this image already", "warning")
         }
     };
 
     // delete image
-    const deleteImage = (name) => {
-        const deleted = selectedImgs?.filter((file) => file.name !== name);
+    const deleteImage = (id) => {
+        const deleted = selectedImgs?.filter((file) => file.id !== id);
         setSelectedImgs(deleted);
     };
 
@@ -118,11 +135,11 @@ const MediaUploader = ({ selectedImgs, setSelectedImgs }) => {
                             width={200}
                             height={200}
                             className="img-fluid cover"
-                            src={URL.createObjectURL(item)}
+                            src={blob ? URL.createObjectURL(item.blob) : URL.createObjectURL(item)}
                             alt="fp1.jpg"
                             />
                             <DeleteIcon
-                            onClick={deleteImage.bind(this, item.name)}
+                            onClick={deleteImage.bind(this, item.id)}
                             data-bs-toggle="tooltip"
                             data-bs-placement="top"
                             title="Delete"

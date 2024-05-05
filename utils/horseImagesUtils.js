@@ -68,18 +68,38 @@ export const processObject = async (obj) => {
     const imagePromises = photosArray.map((photo) => {
         return fetchImageById(photo);
     });
+
+    const barbersPromises = obj.barbers?.map((barber) => {
+        return processImgeObj(barber, 'photo');
+    });
+
+
     
-    const [imagesArray, userProfile] = await Promise.all([
+    const [imagesArray, barbersResponse, userProfile] = await Promise.all([
         Promise.all([...imagePromises]),
-        userProfilePromise
+        Promise.all([...barbersPromises]),
+        userProfilePromise,
     ]);
 
-    const resultObj = { ...obj, images: imagesArray, owner: {...obj.owner}}
+    const resultObj = { ...obj, images: imagesArray, barbers: barbersResponse, owner: {...obj.owner}}
     if (userProfile) {
         resultObj['owner']['profile'] = userProfile
     }
     return resultObj
 };
+
+
+export const processImgeObj = async (obj, field) => {
+    const photo = obj[field] || null;
+    if (!photo) {
+        return { ...obj, [field]: null }
+    }
+    const image = await fetchImageById(photo);
+
+    const resultObj = { ...obj, [field]: image }
+    return resultObj
+};
+
 
 export const fetchImages = async (dataArray) => {
 

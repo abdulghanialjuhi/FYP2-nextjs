@@ -1,8 +1,8 @@
 // pages/api/horses/index.js
 
-import Barberhop from "../../../models/Barberhop";
-import User from "../../../models/User";
-import dbConnect from "../../../utils/dbConnect";
+import Barberhop from "../../../../models/Barberhop";
+import User from "../../../../models/User";
+import dbConnect from "../../../../utils/dbConnect";
 // import verifyToken from "../../../utils/verifyToken";
 
 export default async function handler(req, res) {
@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         case "GET":
             try {
                 // const barber = await Barberhop.findOne({_id: id});
-                const barber = await Barberhop.findOne({_id: id}).populate('owner').exec();
+                const barber = await Barberhop.findOne({owner: id}).populate('owner').exec();
 
                 if (!barber) {
                     return res.status(404).json({ success: false, error: 'barbershop not found' });

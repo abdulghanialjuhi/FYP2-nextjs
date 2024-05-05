@@ -6,14 +6,13 @@ import BarbershopSearchCard from './BarbershopSearchCard'
 import { useRouter } from 'next/router'
 import { useBarbers } from '../../../hooks/useBarbers'
 import { Context } from '../../../context/GlobalState'
+import { SectionLoadingIndicator } from '../../common/LoadingIndicator'
 
 export default function Barbershops() {
     const { barbers, loading } = useBarbers()
     const { filter } = useContext(Context)
 
-    if (loading) {
-        return <h1>loading</h1>
-    }
+
 
     const nameHandler = (item) => {
         return item.name.toLowerCase().includes(filter.name?.toLowerCase());
@@ -25,6 +24,21 @@ export default function Barbershops() {
 
     const cityHandler = (item) => {
         return item.city.toLowerCase().includes(filter.city?.toLowerCase());
+    }
+
+    const serviceHandler = (item) => {
+        console.log('item: ', item);
+        const filteredServices = item.services.filter(service => {
+            return filter.services.filter((ite) => ite.checked).some(item1 => {
+                // Convert both names to lowercase for case-insensitive comparison
+                return item1.name.toLowerCase() === service.service.toLowerCase();
+            });
+        });
+        return filteredServices;
+    }
+
+    if (loading) {
+        return <SectionLoadingIndicator />
     }
 
     return (
@@ -39,7 +53,7 @@ export default function Barbershops() {
                         ?.filter(nameHandler)
                         ?.filter(stateHandler)
                         ?.filter(cityHandler)
-                        // ?.filter(propertiesHandler)
+                        ?.filter(serviceHandler)
                         .map((barber) => (
                             <BarberShopCard key={barber._id} {...barber} />
                         ))}
@@ -51,7 +65,7 @@ export default function Barbershops() {
     )
 }
 
-const BarberShopCard = ({ _id, name, location, review, barbers, state, city, images, owner }) => {
+export const BarberShopCard = ({ _id, name, location, review, barbers, state, city, images, owner }) => {
 
     const router = useRouter()
 

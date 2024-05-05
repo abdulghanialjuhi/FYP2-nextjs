@@ -222,7 +222,7 @@ img {
   width: 100%;
   overflow: hidden;
   cursor: pointer;
-  background-image: url(/upload_photo.jpg);
+  background-image: url(/anonymous.png);
   border-radius: 5px;
   -webkit-transition: -webkit-transform 0.4s;
   transition: -webkit-transform 0.4s;

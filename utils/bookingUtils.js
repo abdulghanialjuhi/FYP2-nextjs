@@ -1,3 +1,4 @@
+import axios from "axios";
 
 function parseDuration(duration) {
     const [hours, minutes] = duration.split(':').map(Number);
@@ -11,7 +12,7 @@ export function getAvailableTimeSlots(openTime, closeTime, serviceDuration) {
     const closeDateTime = new Date('2024-01-01 ' + closeTime);
     
     // Parse service duration to minutes
-    const serviceDurationMinutes = parseDuration(serviceDuration);
+    const serviceDurationMinutes = parseDuration(serviceDuration || "0:30");
   
     // Initialize array to store available time slots
     const availableTimeSlots = [];
@@ -37,7 +38,7 @@ export function getAvailableTimeSlots(openTime, closeTime, serviceDuration) {
     
         // Move to next time slot by adding service duration
         currentTime = new Date(currentTime.getTime() + serviceDurationMinutes * 60000); // Multiply by 60000 to convert minutes to milliseconds
-        if (count === 100) {
+        if (count === 50) {
             break
         }
     }
@@ -78,4 +79,85 @@ export function getDayIndices(offDays) {
         return null;
       }
     });
+}
+
+export function addTimeToDate(date, time) {
+  // Split the time string into hours, minutes, and period (am/pm)
+  const [timeString, period] = time.split(' ');
+  const [hoursString, minutesString] = timeString.split(':');
+
+  // Convert the hours string to a number
+  let hours = parseInt(hoursString);
+  let minutes = parseInt(minutesString);
+
+  // Convert 12-hour format to 24-hour format
+  if (hours === 12 && period.toLowerCase() === 'am') {
+      hours = 0;
+  } else if (period.toLowerCase() === 'pm') {
+      hours += 12;
+  }
+
+  // Parse the date and set the hours and minutes
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(0); // Optional: Set seconds to zero if needed
+  date.setMilliseconds(0); // Optional: Set milliseconds to zero if needed
+
+  return date;
+}
+
+
+export const isBarberBooked = async (barbershop, barber, time, date, service) => {
+
+  try {
+    const res = await axios.get('/api/booking', {params: {status: 'pending', service, barber, barbershop, time, date}})
+    console.log('res: ', res.data?.data);
+    return res.data?.data?.length > 0 ? res.data?.data : null
+  } catch(error) {
+    console.log('error: ', error);
+  }
+
+}
+
+export const checkBooking = async (service, barber, barbershop, date, time) => {
+
+    const targetDate = new Date(date + 'T' + time);
+
+    try {
+        const res = await axios.get('/api/booking', {params: {status: 'pending', service, barber, barbershop, date}})
+
+        const isBooked = res.data.data?.some(appointment => {
+            const appointmentDate = new Date(appointment.date);
+            const appointmentTime = appointment.time.split(' ')[0]; // Extract time without AM/PM
+            const [hours, minutes] = appointmentTime.split(':');
+            appointmentDate.setHours(hours, minutes);
+
+            // Check if the appointment overlaps with the target date and time
+            return targetDate.getTime() === appointmentDate.getTime();
+        });
+
+        console.log('res: ', isBooked);
+        return isBooked
+    } catch(error) {
+        console.log('error: ', error);
+    }
+}
+
+const isBarberBooked1  = async (item, bookObj) => {
+
+  const res = await isBarberBooked(bookObj.barbershop, bookObj.barber, item.startTime, bookObj.date, bookObj.service)
+  if (res) {
+    item['booked'] = true
+  }
+
+  return item
+}
+
+export const checkBookedSlot = async (timeSlots, bookObj) => {
+
+
+  const processedDataArray = await Promise.all(timeSlots.map(item => isBarberBooked1(item, bookObj)));
+  
+  return processedDataArray;
+
 }

@@ -6,20 +6,21 @@ export function useBarbers() {
 
     const [barbers, setBarbers] = useState([])
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
-        axios.get(`api/barbershop`)
+        axios.get(`/api/barbershop`)
         .then(async(res) => {
             console.log(res)
             const barbersArr = await fetchImages(res.data?.data)
-            console.log('barbersArr: ', barbersArr);
             setBarbers(barbersArr)
         })
         .catch((err) => {
+            setError(err)
             console.log(err)
         })
         .finally(() => setLoading(false))
     }, []) 
     
-    return { barbers, setBarbers, loading };
+    return { barbers, setBarbers, error, loading };
 }

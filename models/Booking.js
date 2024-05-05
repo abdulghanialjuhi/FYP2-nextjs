@@ -7,16 +7,16 @@ const bookingSchem = new mongoose.Schema({
         required: true
     },
     status: { type: String, required: true },
-    service: { type: Object, required: true },
+    service: { type: mongoose.Schema.Types.ObjectId, required: true },
     barber: { type: mongoose.Schema.Types.ObjectId, required: true },
-    barbershop: { 
+    barbershop: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Barbershop', 
         required: true 
     },
-    date: {Type: Date, required: true},
-    date: {Type: String, required: true},
+    date: {type: Date, required: true},
+    time: {type: String, required: true},
     isDeleted: { type: Boolean, default: false },
 }, { timestamps: true });
 
-export default mongoose.models.Barbershop || mongoose.model('Booking', bookingSchem);
+export default mongoose.models.Booking || mongoose.model('Booking', bookingSchem);

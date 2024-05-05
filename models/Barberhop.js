@@ -15,19 +15,19 @@ const businesHours = new mongoose.Schema({
         }
     },
     isOpen: { type: Boolean, required: true }
-})
+}, { timestamps: true });
 
 const serviceHoursSchema = new mongoose.Schema({
     service: { type: String, required: true },
     price: { type: Number, required: true },
     duration: { type: String, required: true },
-})
+}, { timestamps: true });
 
 const barbersSchema = new mongoose.Schema({
     name: { type: String, required: true },
     photo: { type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Image' },
     rate: {Type: Number }
-})
+}, { timestamps: true });
 
 const barbershopSchem = new mongoose.Schema({
     // _id: {

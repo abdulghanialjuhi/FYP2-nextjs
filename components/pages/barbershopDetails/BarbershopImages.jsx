@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React, { useState } from 'react'
 
 export default function BarbershopImages({ images }) {
-    
+    console.log('images: ', images);
     const [currentSlide, setCurrentSlide] = useState(0);
 
     const nextSlide = () => {

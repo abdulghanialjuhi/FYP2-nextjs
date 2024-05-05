@@ -1,20 +1,21 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Modal from '../../common/Modal'
 import styled from 'styled-components'
-import { getAvailableTimeSlots, getDayIndices, getDayOfWeek } from '../../../utils/bookingUtils'
+import { addTimeToDate, checkBookedSlot, getAvailableTimeSlots, getDayIndices, getDayOfWeek, isBarberBooked } from '../../../utils/bookingUtils'
 import { Context } from '../../../context/GlobalState'
 import Image from 'next/image'
+import axios from 'axios'
 
-export default function BarbershopServices({ services, barber }) {
+export default function BarbershopServices({ id, services, barber }) {
 
     const [isOpen, setIsOpen] = useState(false)
+    const [btnLoading, setBtnLoading] = useState(false)
     const [serviceSelected, setServiceSelected] = useState()
     const [bookDate, setBookDate] = useState(new Date)
     const [selectedBarber, setSelectedBarber] = useState(null)
     const [booktime, setBooktime] = useState(null)
     const todayDate = new Date().toISOString().split('T')[0];
     const { addNewNotifcation, user, isAuth } = useContext(Context)
-
     const handleSeriveSelect = (service) => {
         setServiceSelected(service)
         setIsOpen(true)
@@ -55,18 +56,30 @@ export default function BarbershopServices({ services, barber }) {
             return addNewNotifcation('Please fill in all fields')
         }
 
-        console.log('bookDate: ', bookDate.toISOString().slice(0, 10));
-
+        
+        // console.log('bookDate: ', bookDate, booktime);
+        
+        // setBtnLoading(true)
         const bookObj = {
-            user: user,
-            service: serviceSelected,
-            barber: selectedBarber,
-            date:  bookDate?.toISOString().slice(0, 10),
+            user: user._id,
+            service: serviceSelected._id,
+            barber: selectedBarber._id,
+            date: bookDate,
             time: booktime,
-            barbershop: '1234'
+            barbershop: id,
+            status: 'pending',
         }
 
+        // isBarberBooked(id, selectedBarber._id, )
         console.log('bookObj: ', bookObj);
+        axios.post('/api/booking', bookObj)
+        .then((res) => {
+            console.log('res: ', res);
+        }).catch((error) => {
+            console.log('error: ', error);
+        }).finally(() => {
+            setBtnLoading(false)
+        })
     }
 
     return (
@@ -109,7 +122,7 @@ export default function BarbershopServices({ services, barber }) {
                                 <span className='text-gray-500'>
                                     Time
                                 </span>
-                                {bookDate && <TimePicker booktime={booktime} setBooktime={setBooktime} bookDate={bookDate} {...barber} serviceSelected={serviceSelected} />}
+                                {bookDate && selectedBarber?._id && <TimePicker booktime={booktime} setBooktime={setBooktime} bookDate={bookDate} {...barber} serviceSelected={serviceSelected} selectedBarber={selectedBarber} />}
                             </div>
                         </div>}
                     </Modal.Body>
@@ -121,8 +134,8 @@ export default function BarbershopServices({ services, barber }) {
                                 <span className='text-gray-400 font-[300] text-end'> {serviceSelected?.duration?.split(':')[0]}h {serviceSelected?.duration?.split(':')[1]}min </span>
                             </div>
                             <div className='flex w-full gap-4 ml-auto max-w-[350px]'>
-                                <button className='seconday-button'> Cancel </button>
-                                <button onClick={handleBook} className='primary-button'> Book </button>
+                                <button onClick={() => setIsOpen(false)} className='seconday-button'> Cancel </button>
+                                <button disabled={btnLoading} onClick={handleBook} className='primary-button'> Book </button>
                             </div>
                            
                         </div>
@@ -133,7 +146,7 @@ export default function BarbershopServices({ services, barber }) {
     )
 }
 
-const BarberPicker = ({ bookDate, barbers, selectedBarber, setSelectedBarber }) => {
+export const BarberPicker = ({ bookDate, barbers, selectedBarber, setSelectedBarber }) => {
 
     const [indexAnimation, setIndexAnimation] = useState(0)
 
@@ -150,7 +163,7 @@ const BarberPicker = ({ bookDate, barbers, selectedBarber, setSelectedBarber }) 
                         <div className='absolute left-[15px] bottom-[15px] px-3 py-1 bg-gray-0 rounded text-sm max-w-[100px] overflow-hidden truncate'>
                             {item.name}
                         </div>
-                        <Image alt='barber' src={item.image ? URL.createObjectURL(item.image) : '/upload_photo.jpg'} width={150} height={150} className='rounded' />
+                        <Image alt='barber' src={item.photo?.blob ? URL.createObjectURL(item.photo?.blob) : '/anonymous.png'} width={150} height={150} className='rounded' />
                     </li>
                 ))}
             </div>
@@ -160,25 +173,45 @@ const BarberPicker = ({ bookDate, barbers, selectedBarber, setSelectedBarber }) 
 }
 
 
-const TimePicker = ({ serviceSelected, businesHours, bookDate, booktime, setBooktime }) => {
+export const TimePicker = ({ serviceSelected, _id, businesHours, bookDate, booktime, setBooktime, selectedBarber }) => {
 
+    // console.log('businesHours: ', businesHours);
     const day = getDayOfWeek(bookDate);
     const serviceDay = businesHours.find((item) => item.day === day)
     // console.log('serviceDay: ', serviceDay);
     const [indexAnimation, setIndexAnimation] = useState(0)
+    const [availableTimeSlots, setAvailableTimeSlots] = useState([])
 
+    const bookObj = {
+        barbershop: _id,
+        service: serviceSelected?._id,
+        barber: selectedBarber?._id,
+        date: bookDate
+    }
+    console.log('bookObj: ', bookObj);
 
+    useEffect(() => {
+        checkTimeSlots()
+    }, [bookDate, serviceSelected, selectedBarber])
 
-    const availableTimeSlots = getAvailableTimeSlots(serviceDay?.openTime, serviceDay?.closeTime, serviceSelected?.duration);
-    // console.log(availableTimeSlots);
+    const checkTimeSlots = async () => {
+        const availableTimeSlots1 = getAvailableTimeSlots(serviceDay?.openTime, serviceDay?.closeTime, serviceSelected?.duration);
+        const newRes = await checkBookedSlot(availableTimeSlots1, bookObj)
+        setAvailableTimeSlots(newRes)
+        // console.log('newRes: ', newRes);
+        // console.log(availableTimeSlots1);
+    }
+
 
     return (
         <ul className='flex w-full gap-2 overflow-hidden items-center'>
             <span onClick={() => setIndexAnimation(prev => prev + 6)} className='px-2 cursor-pointer'> <i className="fa fa-angle-left fa-2x" aria-hidden="true"></i> </span>
             <div className={`flex w-full overflow-scroll gap-4 py-1 px-3 transform translate-z-[${indexAnimation}px] transition-all`}>
                 {availableTimeSlots.map((item) => (
-                    <li key={item.startTime} onClick={() => setBooktime(prev => prev === item.startTime ? null : item.startTime)} className={`flex min-w-[120px] justify-center px-4 py-2 border cursor-pointer hover:bg-gray-200 ${booktime === item.startTime ? 'bg-gray-200' : ''}`}> 
+                    <li key={item.startTime} className={`flex min-w-[120px] justify-center border`}> 
+                    <button onClick={() => setBooktime(prev => prev === item.startTime ? null : item.startTime)} disabled={item.booked} className={`disabled:bg-gray-300 disabled:cursor-not-allowed px-4 py-2 cursor-pointer hover:bg-gray-200 w-full ${booktime === item.startTime ? 'bg-gray-200' : ''}`}>
                         {item.startTime}
+                    </button>
                     </li>
                 ))}
             </div>

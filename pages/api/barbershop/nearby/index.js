@@ -11,9 +11,14 @@ export default async function handler(req, res) {
 
   const handleRequest = async (req, res) => {
     const { method } = req;
+    if (method !== 'GET') {
+      return res.status(504).send('Mothod not allowed')
+    }
 
     try {
         const { latitude, longitude, maxDistance } = req.query;
+        // console.log('ss: ', latitude, longitude, maxDistance);
+
         const locations = await Barberhop.find({
           coordinates: {
             $near: {
@@ -24,7 +29,8 @@ export default async function handler(req, res) {
               $maxDistance: parseInt(maxDistance) // in meters
             }
           }
-        });
+        }).populate('owner');
+        // console.log('locations: ', locations);
         res.json(locations);
     } catch (err) {
         res.status(500).json({ message: err.message });

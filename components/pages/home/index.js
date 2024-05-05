@@ -5,6 +5,10 @@ import states from '../../../data/states'
 import { Context } from '../../../context/GlobalState'
 import Dropdown from '../../common/SelectDropdown'
 import { useRouter } from 'next/router'
+import axios from 'axios'
+import { SectionLoadingIndicator } from '../../common/LoadingIndicator'
+import { BarberShopCard } from '../barbershops'
+import { fetchImages } from '../../../utils/horseImagesUtils'
 
 export default function Home() {
 
@@ -20,10 +24,58 @@ export default function Home() {
     //     { id: 6, name: "Facial Treatment", checked: false }
     // ])
 
+    const [location, setLocation] = useState(false)
+    const [latitude, setLatitude] = useState('')
+    const [longitude, setLongitude] = useState('')
+    const [nearLoading, setNearLoading] = useState(true)
+    const [featuredBarbershops, setFeaturedBarbershops] = useState([])
+
     const { actions, filter } = useContext(Context)
     const router = useRouter()
 
-    useEffect(() => console.log('filter: ', filter), [filter])
+    // useEffect(() => console.log('filter: ', filter), [filter])
+
+    useEffect(() => {
+
+    
+        getLocation();
+    }, []); // Empty dependency array ensures useEffect runs only once on mount
+
+    const getLocation = () => {
+        if ("geolocation" in navigator) {
+          // Ask for permission to access location
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setLocation(true)
+
+                const { latitude, longitude } = position.coords;
+                setLatitude(latitude)
+                setLongitude(longitude)
+                console.log("Latitude:", latitude);
+                console.log("Longitude:", longitude);
+
+                axios.get('/api/barbershop/nearby', {params: {latitude, longitude, maxDistance: 1000}})
+                .then(async(res) => {
+                    console.log('res: ', res);
+                    const barbersArr = await fetchImages(res?.data)
+                    setFeaturedBarbershops(barbersArr)
+
+                }).catch((error) => {
+                    console.log('error: ', error);
+                }).finally(() => {
+                    setNearLoading(false)
+                })
+
+            },
+            (error) => {
+                console.error("Error getting location:", error.message);
+            }
+          );
+        } else {
+          console.log("Geolocation not available");
+          // Handle geolocation not available
+        }
+    };
 
     const handleSearchChange = (name, value) => {
 
@@ -89,7 +141,35 @@ export default function Home() {
             </section>
 
             <section className='flex flex-grow h-screen w-screen bg-gray-100 z-20'>
+                <div className='flex flex-col w-full mt-[4rem]'>
+                    <h1 className='text-3xl font-bold text-center'> Featured Barbershops Near You! </h1>
+                    
+                    <div className='flex w-full mt-3 justify-center'>
+                        {!location ? (
+                            <div className='w-full flex max-w-[800px] mx-auto justify-center'>
+                                <div className='flex flex-col mt-4'>
+                                    Change browser settings to allow location access to get featured barbershops near you
 
+                                    {/* <button className='font-[500] mt-3 hover:text-gray-400' onClick={getLocation}>Allow</button> */}
+                                </div>
+                            </div>
+                        ) : nearLoading ? (
+                            <SectionLoadingIndicator />
+                        ) : !featuredBarbershops.length > 0 ? (
+                            <div className='flex w-full max-w-[800px] mx-auto justify-center'>
+                                no featured barberhsops near you!
+                            </div>
+                        ) : ( 
+                            <div className='flex w-full max-w-[800px] mx-auto'>
+                                <div className='flex w-full flex-col gap-3'>
+                                    {featuredBarbershops.slice(0, 3).map((barbershop) => (
+                                        <BarberShopCard key={barbershop._id} {...barbershop} />
+                                    ))}
+                                </div>
+                            </div>
+                        )}  
+                    </div>
+                </div>
             </section>
 
         </div>

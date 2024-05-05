@@ -11,7 +11,7 @@ export default function Business({ business, setBusiness }) {
     return (
         <div className="flex w-full flex-col">
             <ul className="flex w-full flex-col gap-3">
-                {business.map((barber, i) => (
+                {business?.map((barber, i) => (
                     <BusinessRow key={i} {...barber} index={i} business={business} setBusiness={setBusiness} />
                 ))}
             </ul>

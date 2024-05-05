@@ -72,6 +72,11 @@ const ServiceRow = ({ index, service, price, duration, setServices }) => {
     }
 
     useEffect(() => {
+        setHours(duration.split(':')[0])
+        setMinutes(duration.split(':')[1])
+    }, [])
+
+    useEffect(() => {
         changeService('duration', `${hours}:${minutes}`)
     }, [hours, minutes])
 
@@ -101,19 +106,6 @@ const ServiceRow = ({ index, service, price, duration, setServices }) => {
                     <AnimatedInput placeholderName='Minutes' type="number" value={duration.split(':')[1]} onChange={handleMinutesChange} />
                 </div>
             </SettingInput>
-            {/* <div className="flex w-full max-w-[150px]">
-            </div> */}
-            
-            {/* <SettingInput label='Price' className={'flex-auto max-w-[150px]'}>
-                <input onChange={e => changeService('price', e.target.value)} type="number" className="flex p-3 border border-gray-200 rounded-md" value={price} />
-            </SettingInput>
-            <SettingInput label='Duration' className={'flex-auto max-w-[250px]'}>
-                <div className="flex items-center gap-1 w-full">
-                    <input value={duration.split(':')[0]} onChange={handleHoursChange} placeholder="Hours" type="number" className="flex max-w-[120px]  p-3 border border-gray-200 rounded-md" />
-                    <span>:</span>
-                    <input value={duration.split(':')[1]} onChange={handleMinutesChange} placeholder="Minutes" type="number" className="flex max-w-[120px]  p-3 border border-gray-200 rounded-md" />
-                </div>
-            </SettingInput> */}
         </li>
     )
 }

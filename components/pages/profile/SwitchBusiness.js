@@ -12,7 +12,7 @@ import Barbers from "./Barbers"
 import Business from "./BusinessHours"
 
 
-const isAnyServiceEmpty = (services) => {
+export const isAnyServiceEmpty = (services) => {
     return services.some(service => {
         return (
             service.service.trim() === '' ||
@@ -51,6 +51,38 @@ function isValidLongitude(longitude) {
     return !isNaN(longitude) && longitude >= -180 && longitude <= 180;
 }
 
+export const uplodHorseImages = async (images) => {
+    const imagesPromises = []
+    const imagesId = []
+
+    for (const img of images) {
+        try {
+            let fm = new FormData();
+            fm.append('image', img);
+    
+            const promise = axios.post('/api/images', fm, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+    
+            imagesPromises.push(promise);
+        } catch (error) {
+            console.error('Error uploading image:', error);
+        }
+    }
+
+    try {
+        const responses = await Promise.all(imagesPromises);
+    
+        responses.forEach((img) => {
+            imagesId.push(img.data.imageId);
+        });
+    } catch (error) {
+        console.error('Error processing responses:', error);
+    }
+
+    return imagesId
+
+}
 
 
 export default function SettingSwitch({ name, onClick, icon }) {
@@ -105,39 +137,7 @@ export default function SettingSwitch({ name, onClick, icon }) {
         }
     }
 
-    const uplodHorseImages = async (images) => {
-        const imagesPromises = []
-        const imagesId = []
-    
-        for (const img of images) {
-            try {
-                let fm = new FormData();
-                fm.append('image', img);
-        
-                const promise = axios.post('/api/images', fm, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
-        
-                imagesPromises.push(promise);
-            } catch (error) {
-                console.error('Error uploading image:', error);
-            }
-        }
-    
-        try {
-            const responses = await Promise.all(imagesPromises);
-        
-            responses.forEach((img) => {
-                imagesId.push(img.data.imageId);
-            });
-        } catch (error) {
-            console.error('Error processing responses:', error);
-        }
-    
-        return imagesId
-    
-    }
-    
+
 
 
     const handleCreateBarbershop = async () => {
@@ -265,10 +265,10 @@ export default function SettingSwitch({ name, onClick, icon }) {
                                 </div>
                                 <div className="flex w-full gap-4">
                                 <SettingInput label='Latitude' className={'flex-auto max-w-[400px]'}>
-                                    <input ref={latitudeRef} className='p-3 border border-gray-200 rounded-md' type="text" name="city"/>
+                                    <input ref={latitudeRef} className='p-3 border border-gray-200 rounded-md' type="text" name="latitude"/>
                                 </SettingInput>
                                 <SettingInput label='Longitude' className={'flex-auto max-w-[400px]'}>
-                                    <input ref={longitudeRef} className='p-3 border border-gray-200 rounded-md' type="text" name="city"/>
+                                    <input ref={longitudeRef} className='p-3 border border-gray-200 rounded-md' type="text" name="longitude"/>
                                 </SettingInput>
                                 </div>
                             </li>

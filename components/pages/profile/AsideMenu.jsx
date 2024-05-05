@@ -14,7 +14,7 @@ const AsideMenuContainer = styled.aside`
 
 const AsideVanMenu = styled.div`
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     flex-grow: 1;
     width: 100%;
 `
@@ -24,6 +24,7 @@ const AsideMenuList = styled.ul`
     flex-direction: column;
     list-style-type: none;
     gap: 1rem;
+    width: 100%;
 
     & > li {
         border-top: 0.5px solid var(--color-primary);

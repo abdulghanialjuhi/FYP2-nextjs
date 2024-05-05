@@ -7,6 +7,8 @@ import ProfileInfo from './ProfileInfo'
 import ChangePass from './ChangePass'
 import Switch from './Switch'
 import SettingSwitch from './SwitchBusiness'
+import { useContext } from 'react'
+import { Context } from '../../../context/GlobalState'
 
 
 export default function Profile() {
@@ -34,11 +36,13 @@ export default function Profile() {
 }
 
 export const AsideComponent = () => {
-    const [showModal, setShowModal] = useState(false)
 
-    const handleSwitch = () => {
-        setShowModal(!showModal)
-    }
+    const manageBarbershop = [
+        {title: 'Manage Barbershop', list: [
+            { name: 'Barbershop', path: '/my-barbershop', icon: 'fa fa-scissors' },
+            { name: 'Barbers', path: '/my-barbershop/barbers', icon: 'fa fa-users' },
+        ]},
+    ]
 
     return (
         <AsideMenu>
@@ -46,8 +50,12 @@ export const AsideComponent = () => {
                 <SettingsSection key={item.title} {...item} />
             ))}
             {/* <SettingsSection key={item.title} {...item} /> */}
-            <li className='mt-[5rem] border-t-0 py-2'>
-                <SettingSwitch onClick={handleSwitch} name='Business Account' icon='fa fa-user' />
+            <ul className='border-t-0 py-2'>
+                {manageBarbershop.map((item) => (
+                    <SettingsSectionBarber key={item.title} {...item} />
+                ))}
+            </ul>
+            <li className='mt-auto'>
                 <SettingSidebar path='/api/auth/logout' name='Logout' icon='fa fa-user' />
             </li>
         </AsideMenu>
@@ -78,6 +86,33 @@ export const SettingInput = ({ label, className, children }) => {
             <label className='font-nunito'> {label} </label>
             {children}
         </div>
+    )
+}
+
+export const SettingsSectionBarber = ({ list, title }) => {
+    const [showModal, setShowModal] = useState(false)
+
+    const { user } = useContext(Context)
+    console.log('user: ', user);
+    
+    const handleSwitch = () => {
+        setShowModal(!showModal)
+    }
+
+    return (
+        <li className="flex flex-col"> 
+            <span className='flex w-full text-[13px] my-[4px] text-gray-300 font-[300]'> {title} </span>
+            <div className='flex flex-col flex-grow w-full'>
+                <ul className='flex flex-col gap-1 border-t-0 py-2'>
+                    <SettingSwitch onClick={handleSwitch} name='Business Account' icon='fa fa-user' />
+                    {user.business && list.map((item) => (
+                        <li key={item.path}>
+                           <SettingSidebar {...item} /> 
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </li>
     )
 }
 
